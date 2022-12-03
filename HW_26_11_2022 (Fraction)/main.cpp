@@ -180,6 +180,19 @@ public:
 		denominator /= GCD;
 		return *this;
 	}
+	Fraction Check()
+	{
+		if (denominator < 0)
+		{
+			if (integer) denominator = denominator * (-1);
+			else
+			{
+				numerator = numerator * (-1);
+				denominator = denominator * (-1);
+			}
+		}
+		return *this;
+	}
 	void print() const
 	{
 		if (integer) cout << integer;
@@ -213,8 +226,10 @@ Fraction operator-(Fraction left, Fraction right)
 	Fraction res;
 	res.set_numerator(left.get_numerator()*right.get_denominator() - right.get_numerator()*left.get_denominator());
 	res.set_denominator(left.get_denominator()*right.get_denominator());
+	
 	res.to_proper();
 	res.reduce();
+	res.Check();
 	return res;
 }
 
