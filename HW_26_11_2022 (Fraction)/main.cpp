@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+
+
 #define WIDTH 32
 
 class Fraction;
@@ -50,7 +52,7 @@ public:
 		cout.width(WIDTH);
 		cout << left << "DeafaultConstructor:\t" << this << endl;
 	}
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->integer = integer;
 		this->numerator = 0;
@@ -58,7 +60,50 @@ public:
 		cout.width(WIDTH);
 		cout << left << "SingleArgumentConstructor:\t" << this << endl;
 	}
-	Fraction(int numerator, int denominator)
+	Fraction(double integer)
+	{
+		int count = 0;
+		double ost = 0;
+		double d = integer;
+		int a, b, c, f;
+		a = integer / 1;
+		ost = integer - a;
+		do
+		{
+			ost = ost * 10;
+			f = ost / 1;
+			ost = ost - f;
+			count++;
+			f = 0;
+		} while (ost > 0);
+		b = (integer - a) * pow(10, count);
+		c = pow(10, count);
+		int more, less, rest;
+		if (b > c)
+		{
+			more = b;
+			less = c;
+		}
+		else
+		{
+			more = c;
+			less = b;
+		}
+		do
+		{
+			rest = more % less;
+			more = less;
+			less = rest;
+		} while (rest);
+		int GCD = more;
+		b /= GCD;
+		c /= GCD;
+		this->integer = a;
+		this->numerator = b;
+		this->denominator = c;
+	}
+
+	explicit Fraction(int numerator, int denominator)
 	{
 		this->integer = 0;
 		this->numerator = numerator;
@@ -66,7 +111,7 @@ public:
 		cout.width(WIDTH);
 		cout << left << "Constructor:\t" << this << endl;
 	}
-	Fraction(int integer, int numerator, int denominator)
+	explicit Fraction(int integer, int numerator, int denominator)
 	{
 		this->integer = integer;
 		this->numerator = numerator;
@@ -136,6 +181,7 @@ public:
 		return old;
 	}
 
+	
 	// Methods:
 	void to_proper()
 	{
@@ -205,6 +251,7 @@ public:
 		else if (integer == 0) cout << 0;
 		cout << endl;
 	}
+	
 };
 
 Fraction operator+(Fraction left, Fraction right)
@@ -295,13 +342,43 @@ bool operator!=(Fraction left, Fraction right)
 {
 	return !(left == right);
 }
+
+ostream& operator <<(ostream& os, const Fraction& obj)
+{
+	if (obj.get_integer()) os << obj.get_integer();
+	if (obj.get_numerator())
+	{
+		if (obj.get_integer()) cout << "(";
+		os << obj.get_numerator() << "/" << obj.get_denominator();
+		if (obj.get_integer()) cout << ")";
+	}
+	else if (obj.get_integer() == 0) os << 0;
+	return os;
+}
+
+istream& operator >>(istream& is, Fraction& obj)
+{
+	char x;
+	int numerator;
+	int denominator;
+	is >> numerator >> x >> denominator;
+	obj.set_numerator (numerator);
+	obj.set_denominator (denominator);
+	obj.to_proper();
+	return is;
+}
+
 //#define CONSTRUCTORS_CHECK
-#define ARITHMETICAL_OPERATORS_CHECK
+//#define ARITHMETICAL_OPERATORS_CHECK
 //#define INCREMENT_CHECK
+//#define HOME_WORK_1
+#define HOME_WORK_2
+
+
 
 void main()
 {
-	setlocale(LC_ALL, " ");
+	setlocale(LC_ALL, "Russian");
 	
 #ifdef CONSTRUCTORS_CHECK
 	Fraction A;
@@ -380,10 +457,28 @@ void main()
 		i.print();
 	}
 #endif
-	cout << (Fraction(1, 2) == Fraction(5, 10)) << endl;
+/*	cout << (Fraction(1, 2) == Fraction(5, 10)) << endl;
 	cout << (Fraction(1, 2) != Fraction(5, 10)) << endl;
 	cout << (Fraction(1, 2) > Fraction(6, 10)) << endl;
 	cout << (Fraction(1, 2) < Fraction(6, 10)) << endl;
 	cout << (Fraction(1, 2) >= Fraction(5, 10)) << endl;
 	cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;
+	
+	Fraction B(2, 3, 4);
+	
+	cout << B<< endl;*/
+
+#ifdef HOME_WORK_1
+	Fraction C;
+	cout << "¬ведите простую дробь: ";
+	cin >> C;
+	cout << C << endl;
+#endif
+
+#ifdef HOME_WORK_2
+	Fraction B = 2.75;
+	cout << B << endl;
+#endif
+
+
 }
